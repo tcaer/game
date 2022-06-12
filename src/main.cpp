@@ -15,9 +15,6 @@
 
 Global global;
 
-#define WNDW_WIDTH 1600
-#define WNDW_HEIGHT 900
-
 struct PosColorVertex
 {
 	float x;
@@ -112,13 +109,15 @@ int main(void)
     while(!global.platform->window->is_close_requested()) {
         global.platform->window->prepare_frame();
         global.renderer->prepare_frame();
-        
+
         const bx::Vec3 at = {0.0f, 0.0f,  0.0f};
         const bx::Vec3 eye = {0.0f, 0.0f, -5.0f};
         float view[16];
         bx::mtxLookAt(view, eye, at);
         float proj[16];
-        bx::mtxProj(proj, 60.0f, float(WNDW_WIDTH) / float(WNDW_HEIGHT), 0.1f, 100.0f, bgfx::getCaps()->homogeneousDepth);
+        bx::mtxProj(proj, 60.0f, 
+            float(global.platform->window->width()) / float(global.platform->window->height()), 
+            0.1f, 100.0f, bgfx::getCaps()->homogeneousDepth);
         bgfx::setViewTransform(0, view, proj);
 
         float mtx[16];
