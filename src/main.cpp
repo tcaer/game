@@ -10,6 +10,7 @@
 
 #include "platform/platform.hpp"
 #include "platform/glfwwindow.hpp"
+#include "renderer/renderer.hpp"
 #include "global.hpp"
 
 Global global;
@@ -90,20 +91,10 @@ int main(void)
         "Game"
     );
 
-    bgfx::PlatformData pd;
-    platform.window->set_platform_data(pd);
-
-    bgfx::Init bgfxInit;
-    bgfxInit.platformData = pd;
-    bgfxInit.type = bgfx::RendererType::Metal;
-    bgfxInit.resolution.width = platform.window->width();
-    bgfxInit.resolution.height = platform.window->height();
-    bgfxInit.resolution.reset = BGFX_RESET_VSYNC;
-    bgfx::renderFrame();
-    bgfx::init(bgfxInit);
-
-    bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x443355FF, 1.0f, 0);
-    bgfx::setViewRect(0, 0, 0, WNDW_WIDTH, WNDW_HEIGHT);
+    Renderer renderer;
+    global.renderer = &renderer;
+    renderer.init(platform.window->width(), platform.window->height());
+    renderer.resize(platform.window->width(), platform.window->height());
 
     bgfx::VertexLayout pcvDecl;
     pcvDecl.begin()
@@ -120,6 +111,8 @@ int main(void)
     unsigned int counter = 0;
     while(!global.platform->window->is_close_requested()) {
         global.platform->window->prepare_frame();
+        global.renderer->prepare_frame();
+        
         const bx::Vec3 at = {0.0f, 0.0f,  0.0f};
         const bx::Vec3 eye = {0.0f, 0.0f, -5.0f};
         float view[16];
@@ -136,13 +129,13 @@ int main(void)
         bgfx::setIndexBuffer(ibh);
     
         bgfx::submit(0, program);
-        bgfx::frame();
+        
+        global.renderer->end_frame();
         counter++;
     }
 
     bgfx::destroy(ibh);
     bgfx::destroy(vbh);
-    bgfx::shutdown();
 
     return 0;
 }
