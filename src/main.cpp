@@ -51,32 +51,6 @@ static const uint16_t cubeTriList[] =
 	6, 3, 7,
 };
 
-bgfx::ShaderHandle loadShader(const char *FILENAME)
-{
-    const char* shaderPath = "shaders/metal";
-
-    size_t shaderLen = strlen(shaderPath);
-    size_t fileLen = strlen(FILENAME);
-    char *filePath = (char *)malloc(shaderLen + fileLen);
-    memcpy(filePath, shaderPath, shaderLen);
-    memcpy(&filePath[shaderLen], FILENAME, fileLen);
-
-    FILE *file = fopen(FILENAME, "rb");
-    if (file == NULL) {
-        printf("Failed to open\n");
-    }
-    fseek(file, 0, SEEK_END);
-    long fileSize = ftell(file);
-    fseek(file, 0, SEEK_SET);
-
-    const bgfx::Memory *mem = bgfx::alloc(fileSize + 1);
-    fread(mem->data, 1, fileSize, file);
-    mem->data[mem->size - 1] = '\0';
-    fclose(file);
-
-    return bgfx::createShader(mem);
-}
-
 int main(void)
 {
     Platform platform;
@@ -101,11 +75,7 @@ int main(void)
     bgfx::VertexBufferHandle vbh = bgfx::createVertexBuffer(bgfx::makeRef(cubeVertices, sizeof(cubeVertices)), pcvDecl);
     bgfx::IndexBufferHandle ibh = bgfx::createIndexBuffer(bgfx::makeRef(cubeTriList, sizeof(cubeTriList)));
 
-    bgfx::ShaderHandle vsh = loadShader("build/vs_cubes.bin");
-    bgfx::ShaderHandle fsh = loadShader("build/fs_cubes.bin");
-    bgfx::ProgramHandle program = bgfx::createProgram(vsh, fsh, true);
-
-    unsigned int counter = 0;
+    unsigned counter = 0;
     while(!global.platform->window->is_close_requested()) {
         global.platform->window->prepare_frame();
         global.renderer->prepare_frame();
@@ -127,7 +97,7 @@ int main(void)
         bgfx::setVertexBuffer(0, vbh);
         bgfx::setIndexBuffer(ibh);
     
-        bgfx::submit(0, program);
+        bgfx::submit(0, global.renderer->shader_manager.get_shader("cubes"));
         
         global.renderer->end_frame();
         counter++;

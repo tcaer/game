@@ -24,6 +24,8 @@ void Renderer::init(unsigned width, unsigned height) {
 
   bgfx::setViewClear(VIEW_MAIN, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x443355FF, 1.0f, 0);
   bgfx::setDebug(BGFX_DEBUG_TEXT | BGFX_DEBUG_STATS);
+
+  shader_manager.load_shader("cubes", "build/vs_cubes.bin", "build/fs_cubes.bin");
 }
 
 void Renderer::resize(unsigned width, unsigned height) {

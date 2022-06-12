@@ -3,9 +3,13 @@
 
 #include <bgfx/bgfx.h>
 
+#include "shader/shadermanager.hpp"
+
 struct Renderer {
   static constexpr bgfx::ViewId
     VIEW_MAIN = 0;
+
+  ShaderManager shader_manager;
 
   Renderer();
   ~Renderer();
