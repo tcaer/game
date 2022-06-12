@@ -1,11 +1,18 @@
 #include <stdio.h>
 #include <iostream>
+#include <memory>
 #include "bgfx/bgfx.h"
 #include "bgfx/platform.h"
 #include "bx/math.h"
 #include "GLFW/glfw3.h"
 #define GLFW_EXPOSE_NATIVE_COCOA
 #include "GLFW/glfw3native.h"
+
+#include "platform/platform.hpp"
+#include "platform/glfwwindow.hpp"
+#include "global.hpp"
+
+Global global;
 
 #define WNDW_WIDTH 1600
 #define WNDW_HEIGHT 900
@@ -74,17 +81,23 @@ bgfx::ShaderHandle loadShader(const char *FILENAME)
 
 int main(void)
 {
-    glfwInit();
-    GLFWwindow* window = glfwCreateWindow(WNDW_WIDTH, WNDW_HEIGHT, "Hello, bgfx!", NULL, NULL);
+    Platform platform;
+    global.platform = &platform;
+
+    platform.window = std::make_unique<GLFWWindow>(
+        1280,
+        720,
+        "Game"
+    );
 
     bgfx::PlatformData pd;
-    pd.nwh = glfwGetCocoaWindow(window);
+    platform.window->set_platform_data(pd);
 
     bgfx::Init bgfxInit;
     bgfxInit.platformData = pd;
-    bgfxInit.type = bgfx::RendererType::Count;
-    bgfxInit.resolution.width = WNDW_WIDTH;
-    bgfxInit.resolution.height = WNDW_HEIGHT;
+    bgfxInit.type = bgfx::RendererType::Metal;
+    bgfxInit.resolution.width = platform.window->width();
+    bgfxInit.resolution.height = platform.window->height();
     bgfxInit.resolution.reset = BGFX_RESET_VSYNC;
     bgfx::renderFrame();
     bgfx::init(bgfxInit);
@@ -105,8 +118,8 @@ int main(void)
     bgfx::ProgramHandle program = bgfx::createProgram(vsh, fsh, true);
 
     unsigned int counter = 0;
-    while(!glfwWindowShouldClose(window)) {
-        glfwPollEvents();
+    while(!global.platform->window->is_close_requested()) {
+        global.platform->window->prepare_frame();
         const bx::Vec3 at = {0.0f, 0.0f,  0.0f};
         const bx::Vec3 eye = {0.0f, 0.0f, -5.0f};
         float view[16];
@@ -130,8 +143,6 @@ int main(void)
     bgfx::destroy(ibh);
     bgfx::destroy(vbh);
     bgfx::shutdown();
-    glfwDestroyWindow(window);
-    glfwTerminate();
 
     return 0;
 }
