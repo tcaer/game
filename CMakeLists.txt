@@ -17,14 +17,13 @@ target_link_libraries(game glfw)
 target_include_directories(game PRIVATE lib/glfw/include)
 target_compile_definitions(game PRIVATE GLFW_INCLUDE_NONE)
 
-# add later
-# add_subdirectory(lib/glm)
-# target_link_libraries(game glm)
-# target_include_directories(game PRIVATE lib/glm)
+add_subdirectory(lib/glm)
+target_link_libraries(game glm)
+target_include_directories(game PRIVATE lib/glm)
 
-# add_subdirectory(lib/toml)
-# target_link_libraries(game tomlplusplus_tomlplusplus)
-# target_include_directories(game PRIVATE lib/toml/include)
+add_subdirectory(lib/toml)
+target_link_libraries(game tomlplusplus_tomlplusplus)
+target_include_directories(game PRIVATE lib/toml/include)
 
 add_subdirectory(lib/bgfx)
 target_link_libraries(game bgfx)

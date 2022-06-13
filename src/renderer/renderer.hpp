@@ -2,6 +2,7 @@
 #define RENDERER_HPP
 
 #include <bgfx/bgfx.h>
+#include <glm/glm.hpp>
 
 #include "shader/shadermanager.hpp"
 
@@ -14,9 +15,9 @@ struct Renderer {
   Renderer();
   ~Renderer();
 
-  void init(unsigned width, unsigned height);
+  void init(glm::vec2 window_size);
 
-  void resize(unsigned width, unsigned height);
+  void resize(glm::vec2 window_size);
 
   void prepare_frame();
 

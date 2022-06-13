@@ -5,12 +5,11 @@
 #define GLFW_EXPOSE_NATIVE_COCOA
 #include <GLFW/glfw3native.h>
 
-GLFWWindow::GLFWWindow(unsigned width, unsigned height, const char* title) {
+GLFWWindow::GLFWWindow(glm::vec2 size, const char* title) { 
   assert(glfwInit()); 
 
-  m_window = glfwCreateWindow(width, height, title, nullptr, nullptr);
-  m_width = width;
-  m_height = height;
+  m_window = glfwCreateWindow(size.x, size.y, title, nullptr, nullptr);
+  m_size = size;
 }
 
 GLFWWindow::~GLFWWindow() {
@@ -22,21 +21,17 @@ bool GLFWWindow::is_close_requested() {
   return glfwWindowShouldClose(m_window);
 }
 
-unsigned GLFWWindow::width() {
-  return m_width;
-}
-
-unsigned GLFWWindow::height() {
-  return m_height;
+glm::vec2 GLFWWindow::size() {
+  return m_size;
 }
 
 bool GLFWWindow::resized() {
   int width, height;
   glfwGetWindowSize(m_window, &width, &height);
 
-  if (width != m_width || height != m_height) {
-    m_width = width;
-    m_height = height;
+  if (width != m_size.x || height != m_size.y) {
+    m_size.x = width;
+    m_size.y = height;
 
     return true;
   }

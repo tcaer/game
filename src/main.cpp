@@ -1,12 +1,8 @@
-#include <stdio.h>
 #include <iostream>
-#include <memory>
-#include "bgfx/bgfx.h"
-#include "bgfx/platform.h"
-#include "bx/math.h"
-#include "GLFW/glfw3.h"
-#define GLFW_EXPOSE_NATIVE_COCOA
-#include "GLFW/glfw3native.h"
+#include <glm/glm.hpp>
+#include <bgfx/bgfx.h>
+#include <bx/math.h>
+#include <toml++/toml.h>
 
 #include "platform/platform.hpp"
 #include "platform/glfwwindow.hpp"
@@ -56,16 +52,22 @@ int main(void)
     Platform platform;
     global.platform = &platform;
 
+    try {
+        global.settings = toml::parse_file("settings.toml");
+    } catch (const toml::parse_error& err) {
+        std::cerr << "Failed to parse settings.toml:\n" << err << std::endl;
+        return 1;
+    }
+
     platform.window = std::make_unique<GLFWWindow>(
-        1280,
-        720,
+        glm::vec2(1280, 720),
         "Game"
     );
 
     Renderer renderer;
     global.renderer = &renderer;
-    renderer.init(platform.window->width(), platform.window->height());
-    renderer.resize(platform.window->width(), platform.window->height());
+    renderer.init(platform.window->size());
+    renderer.resize(platform.window->size());
 
     bgfx::VertexLayout pcvDecl;
     pcvDecl.begin()
@@ -77,6 +79,10 @@ int main(void)
 
     unsigned counter = 0;
     while(!global.platform->window->is_close_requested()) {
+        if (global.platform->window->resized()) {
+            global.renderer->resize(global.platform->window->size());
+        }
+
         global.platform->window->prepare_frame();
         global.renderer->prepare_frame();
 
@@ -86,7 +92,7 @@ int main(void)
         bx::mtxLookAt(view, eye, at);
         float proj[16];
         bx::mtxProj(proj, 60.0f, 
-            float(global.platform->window->width()) / float(global.platform->window->height()), 
+            float(global.platform->window->size().x) / float(global.platform->window->size().y), 
             0.1f, 100.0f, bgfx::getCaps()->homogeneousDepth);
         bgfx::setViewTransform(0, view, proj);
 

@@ -3,18 +3,18 @@
 
 #include <GLFW/glfw3.h>
 #include <bgfx/platform.h>
+#include <glm/glm.hpp>
 
 struct GLFWWindow {
   GLFWwindow* m_window;
-  unsigned m_width, m_height;
+  glm::vec2 m_size;
 
-  GLFWWindow(unsigned width, unsigned height, const char* title);
+  GLFWWindow(glm::vec2 size, const char* title);
   ~GLFWWindow();
 
   bool is_close_requested();
 
-  unsigned width();
-  unsigned height();
+  glm::vec2 size();
 
   bool resized();
 
