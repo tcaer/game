@@ -1,3 +1,8 @@
 [window]
 width = 1280
 height = 720
+
+[shaders]
+[shaders.cubes]
+vertex = ""
+fragment = ""
