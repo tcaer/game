@@ -10,6 +10,8 @@ struct ShaderManager {
 
   ShaderManager();
 
+  void init();
+
   void load_shader(std::string name, std::string vs_path, std::string fs_path);
 
   bgfx::ProgramHandle get_shader(std::string name);

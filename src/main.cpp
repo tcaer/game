@@ -60,7 +60,10 @@ int main(void)
     }
 
     platform.window = std::make_unique<GLFWWindow>(
-        glm::vec2(1280, 720),
+        glm::vec2(
+            global.settings["window"]["width"].value_or(1280),
+            global.settings["window"]["height"].value_or(720)
+        ),
         "Game"
     );
 

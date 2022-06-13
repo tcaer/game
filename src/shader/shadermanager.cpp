@@ -3,7 +3,22 @@
 #include <assert.h>
 #include <fstream>
 
-ShaderManager::ShaderManager() = default;
+#include "global.hpp"
+
+ShaderManager::ShaderManager() = default;  
+
+void ShaderManager::init() {
+  auto shader_settings = global.settings["shaders"].as_table();
+
+  for (auto&& [key, val] : *shader_settings) {
+    std::string name = std::string(key.str());
+    auto sources = val.as_table();
+    std::string vs_path = sources->get("vertex")->as_string()->get();
+    std::string fs_path = sources->get("fragment")->as_string()->get();
+
+    load_shader(name, vs_path, fs_path);
+  }
+}
 
 void ShaderManager::load_shader(std::string name, std::string vs_path, std::string fs_path) {
   auto vsh = process_shader(vs_path);
