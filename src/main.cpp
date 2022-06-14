@@ -6,7 +6,7 @@
 
 #include "platform/platform.hpp"
 #include "platform/glfwwindow.hpp"
-#include "renderer/renderer.hpp"
+#include "gfx/renderer.hpp"
 #include "global.hpp"
 
 Global global;

@@ -4,7 +4,7 @@
 #include <toml++/toml.h>
 
 #include "platform/platform.hpp"
-#include "renderer/renderer.hpp"
+#include "gfx/renderer.hpp"
 
 struct Global {
   Platform* platform;
