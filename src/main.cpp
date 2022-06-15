@@ -1,7 +1,8 @@
 #include <iostream>
 #include <glm/glm.hpp>
+#include <glm/ext.hpp>
+#include <glm/ext/matrix_transform.hpp>
 #include <bgfx/bgfx.h>
-#include <bx/math.h>
 #include <toml++/toml.h>
 
 #include "platform/platform.hpp"
@@ -48,22 +49,33 @@ int main(void) {
         global.platform->window->prepare_frame();
         global.renderer->prepare_frame();
 
-        const bx::Vec3 at = {0.0f, 0.0f,  0.0f};
-        const bx::Vec3 eye = {0.0f, 0.0f, -5.0f};
-        float view[16];
-        bx::mtxLookAt(view, eye, at);
-        float proj[16];
-        bx::mtxProj(proj, 60.0f, 
-            float(global.platform->window->size().x) / float(global.platform->window->size().y), 
-            0.1f, 100.0f, bgfx::getCaps()->homogeneousDepth);
-        bgfx::setViewTransform(0, view, proj);
+        glm::mat4 view = glm::mat4(1.0);
+        view = glm::lookAt(glm::vec3(2.0f, 0.0f, 0.0f),
+                           glm::vec3(0.0f, 0.0f, 0.0f),
+                           glm::vec3(0.0f, 0.0f, 1.0f));
 
-        float mtx[16];
-        bx::mtxRotateXY(mtx, counter * 0.01f, counter * 0.01f);
-        bgfx::setTransform(mtx);
+        glm::mat4 proj = glm::perspective(glm::radians(60.0f), 
+                float(global.platform->window->size().x) / float(global.platform->window->size().y),
+                0.1f,
+                100.0f);
+        bgfx::setViewTransform(0, glm::value_ptr(view), glm::value_ptr(proj));
+
+        glm::mat4 mtx = glm::mat4(1.0);
+        mtx = glm::rotate(mtx, counter * 0.01f, { 0.2, 0.5, 0.8 });
+        mtx = glm::scale(mtx, { 0.2, 0.2, 0.2 });
+        bgfx::setTransform(glm::value_ptr(mtx));
         
         mesh.bind();
     
+        uint64_t  _state = 0
+                | BGFX_STATE_WRITE_RGB
+                | BGFX_STATE_WRITE_A
+                | BGFX_STATE_WRITE_Z
+                | BGFX_STATE_DEPTH_TEST_LESS
+                | BGFX_STATE_CULL_CCW
+                | BGFX_STATE_MSAA
+                ;
+        bgfx::setState(_state);
         bgfx::submit(0, global.renderer->shader_manager.get_shader("cubes"));
         
         global.renderer->end_frame();
