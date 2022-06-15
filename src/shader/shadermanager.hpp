@@ -6,8 +6,6 @@
 #include <bgfx/bgfx.h>
 
 struct ShaderManager {
-  std::unordered_map<std::string, bgfx::ProgramHandle> m_shaders;
-
   ShaderManager();
 
   void init();
@@ -17,6 +15,8 @@ struct ShaderManager {
   bgfx::ProgramHandle get_shader(std::string name);
 
 private:
+  std::unordered_map<std::string, bgfx::ProgramHandle> m_shaders;
+
   bgfx::ShaderHandle process_shader(std::string path);
 };
 
