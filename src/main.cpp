@@ -9,6 +9,7 @@
 #include "platform/glfwwindow.hpp"
 #include "gfx/renderer.hpp"
 #include "gfx/mesh/coloredcubemesh.hpp"
+#include "world/camera.hpp"
 #include "global.hpp"
 
 Global global;
@@ -40,6 +41,8 @@ int main(void) {
     ColoredCubeMesh mesh;
     mesh.load(nullptr);
 
+    Camera camera(60.0f, { 10, 5, 5 });
+
     unsigned counter = 0;
     while(!global.platform->window->is_close_requested()) {
         if (global.platform->window->resized()) {
@@ -49,23 +52,14 @@ int main(void) {
         global.platform->window->prepare_frame();
         global.renderer->prepare_frame();
 
-        glm::mat4 view = glm::mat4(1.0);
-        view = glm::lookAt(glm::vec3(5.0f, 5.0f, 5.0f),
-                           glm::vec3(0.0f, 0.0f, 0.0f),
-                           glm::vec3(0.0f, 0.0f, 1.0f));
-
-        glm::mat4 proj = glm::perspective(glm::radians(60.0f), 
-                float(global.platform->window->size().x) / float(global.platform->window->size().y),
-                0.1f,
-                100.0f);
-        bgfx::setViewTransform(0, glm::value_ptr(view), glm::value_ptr(proj));
+        camera.update({ -10, 5, 5 });
 
         for (int x = 1; x < 21; x++) {
             for (int y = 1; y < 21; y++) {
                 glm::mat4 mtx = glm::mat4(1.0);
-                mtx = glm::translate(mtx, { 0, 0.4 * y, 0.2 * x});
+                mtx = glm::translate(mtx, { 0, 0.5 * y, 0.5 * x});
                 mtx = glm::rotate(mtx, counter * 0.01f, { x / 50, y / 50, 0.8 });
-                mtx = glm::scale(mtx, { 0.2, 0.2, 0.2 });
+                mtx = glm::scale(mtx, { 0.15, 0.15, 0.15 });
                 bgfx::setTransform(glm::value_ptr(mtx));
                 mesh.bind();
 
