@@ -50,7 +50,7 @@ int main(void) {
         global.renderer->prepare_frame();
 
         glm::mat4 view = glm::mat4(1.0);
-        view = glm::lookAt(glm::vec3(2.0f, 0.0f, 0.0f),
+        view = glm::lookAt(glm::vec3(5.0f, 5.0f, 5.0f),
                            glm::vec3(0.0f, 0.0f, 0.0f),
                            glm::vec3(0.0f, 0.0f, 1.0f));
 
@@ -60,23 +60,27 @@ int main(void) {
                 100.0f);
         bgfx::setViewTransform(0, glm::value_ptr(view), glm::value_ptr(proj));
 
-        glm::mat4 mtx = glm::mat4(1.0);
-        mtx = glm::rotate(mtx, counter * 0.01f, { 0.2, 0.5, 0.8 });
-        mtx = glm::scale(mtx, { 0.2, 0.2, 0.2 });
-        bgfx::setTransform(glm::value_ptr(mtx));
-        
-        mesh.bind();
-    
-        uint64_t  _state = 0
-                | BGFX_STATE_WRITE_RGB
-                | BGFX_STATE_WRITE_A
-                | BGFX_STATE_WRITE_Z
-                | BGFX_STATE_DEPTH_TEST_LESS
-                | BGFX_STATE_CULL_CCW
-                | BGFX_STATE_MSAA
-                ;
-        bgfx::setState(_state);
-        bgfx::submit(0, global.renderer->shader_manager.get_shader("cubes"));
+        for (int x = 1; x < 21; x++) {
+            for (int y = 1; y < 21; y++) {
+                glm::mat4 mtx = glm::mat4(1.0);
+                mtx = glm::translate(mtx, { 0, 0.4 * y, 0.2 * x});
+                mtx = glm::rotate(mtx, counter * 0.01f, { x / 50, y / 50, 0.8 });
+                mtx = glm::scale(mtx, { 0.2, 0.2, 0.2 });
+                bgfx::setTransform(glm::value_ptr(mtx));
+                mesh.bind();
+
+                uint64_t  _state = 0
+                    | BGFX_STATE_WRITE_RGB
+                    | BGFX_STATE_WRITE_A
+                    | BGFX_STATE_WRITE_Z
+                    | BGFX_STATE_DEPTH_TEST_LESS
+                    | BGFX_STATE_CULL_CCW
+                    | BGFX_STATE_MSAA
+                    ;
+                bgfx::setState(_state);
+                bgfx::submit(0, global.renderer->shader_manager.get_shader("cubes"));
+            }
+        }
         
         global.renderer->end_frame();
         counter++;
