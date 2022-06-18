@@ -1,2 +1,2 @@
-
-uniform mat4  u_modelViewProj;
+#include <bgfx_shader.sh>
+#include "shaderlib.sh"

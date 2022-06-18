@@ -27,12 +27,11 @@ void Renderer::init(glm::vec2 window_size) {
   bgfx::setDebug(BGFX_DEBUG_TEXT | BGFX_DEBUG_STATS);
 
   shader_manager.init();
-  // shader_manager.load_shader("cubes", "build/vs_cubes.bin", "build/fs_cubes.bin");
 }
 
 void Renderer::resize(glm::vec2 window_size) {
-  bgfx::setViewRect(VIEW_MAIN, 0, 0, window_size.x, window_size.y);
   bgfx::reset(window_size.x, window_size.y, BGFX_RESET_VSYNC);
+  bgfx::setViewRect(VIEW_MAIN, 0, 0, window_size.x, window_size.y);
 }
 
 void Renderer::prepare_frame() {

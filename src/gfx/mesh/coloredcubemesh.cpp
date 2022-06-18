@@ -1,14 +1,14 @@
 #include "gfx/mesh/coloredcubemesh.hpp"
 
 ColoredCubeMesh::PosColorVertex ColoredCubeMesh::m_vertices[] = {
-	{-1.0f,  1.0f,  1.0f, 0xff000000 },
-	{ 1.0f,  1.0f,  1.0f, 0xff0000ff },
-	{-1.0f, -1.0f,  1.0f, 0xff00ff00 },
-	{ 1.0f, -1.0f,  1.0f, 0xff00ffff },
-	{-1.0f,  1.0f, -1.0f, 0xffff0000 },
-	{ 1.0f,  1.0f, -1.0f, 0xffff00ff },
-	{-1.0f, -1.0f, -1.0f, 0xffffff00 },
-	{ 1.0f, -1.0f, -1.0f, 0xffffffff }
+	{-1.0f,  1.0f,  1.0f, 0xff000000, 0.0f, 0.0f },
+	{ 1.0f,  1.0f,  1.0f, 0xff0000ff, 1.0f, 1.0f },
+	{-1.0f, -1.0f,  1.0f, 0xff00ff00, 0.0f, 1.0f },
+	{ 1.0f, -1.0f,  1.0f, 0xff00ffff, 1.0f, 0.0f },
+	{-1.0f,  1.0f, -1.0f, 0xffff0000, 0.0f, 0.0f },
+	{ 1.0f,  1.0f, -1.0f, 0xffff00ff, 1.0f, 1.0f },
+	{-1.0f, -1.0f, -1.0f, 0xffffff00, 0.0f, 1.0f },
+	{ 1.0f, -1.0f, -1.0f, 0xffffffff, 1.0f, 0.0f }
 };
 
 const uint16_t ColoredCubeMesh::m_cubeTriList[] = {
@@ -36,6 +36,7 @@ void ColoredCubeMesh::load(void* data) {
 	layout.begin()
 		.add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
 		.add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true)
+		.add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
 	.end();
 	m_vbh = bgfx::createVertexBuffer(bgfx::makeRef(m_vertices, sizeof(m_vertices)), layout);
 	m_ibh = bgfx::createIndexBuffer(bgfx::makeRef(m_cubeTriList, sizeof(m_cubeTriList)));

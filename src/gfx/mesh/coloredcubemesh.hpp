@@ -21,6 +21,8 @@ public:
     float y;
     float z;
     uint32_t color;
+    float tx;
+    float ty;
   };
   static PosColorVertex m_vertices[];
   

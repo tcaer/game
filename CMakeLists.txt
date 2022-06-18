@@ -29,3 +29,5 @@ add_subdirectory(lib/bgfx)
 target_link_libraries(game bgfx)
 target_include_directories(game PRIVATE lib/bgfx/bgfx/include)
 target_include_directories(game PRIVATE lib/bgfx/bx/include)
+
+target_include_directories(game PRIVATE lib/stb)

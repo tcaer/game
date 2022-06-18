@@ -4,6 +4,8 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <bgfx/bgfx.h>
 #include <toml++/toml.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 
 #include "platform/platform.hpp"
 #include "platform/glfwwindow.hpp"
@@ -15,6 +17,8 @@
 Global global;
 
 int main(void) {
+    stbi_set_flip_vertically_on_load(true);
+    
     Platform platform;
     global.platform = &platform;
 
@@ -42,6 +46,15 @@ int main(void) {
     mesh.load(nullptr);
 
     Camera camera(60.0f, { 10, 5, 5 });
+
+    int w, h, nrChannels;
+    unsigned char* data = stbi_load("./res/textures/container.jpeg", &w, &h, &nrChannels, 0);
+    const bgfx::Memory* im = bgfx::copy(data, w*h*nrChannels);
+
+    bgfx::TextureHandle texture = bgfx::createTexture2D(w, h, false, 1, bgfx::TextureFormat::RGB8, BGFX_TEXTURE_NONE | BGFX_SAMPLER_NONE, im);
+    stbi_image_free(data);
+
+    bgfx::UniformHandle tex = bgfx::createUniform("texture", bgfx::UniformType::Sampler);
 
     unsigned counter = 0;
     while(!global.platform->window->is_close_requested()) {
@@ -72,6 +85,7 @@ int main(void) {
                     | BGFX_STATE_MSAA
                     ;
                 bgfx::setState(_state);
+                bgfx::setTexture(0, tex, texture);
                 bgfx::submit(0, global.renderer->shader_manager.get_shader("cubes"));
             }
         }

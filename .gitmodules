@@ -10,3 +10,6 @@
 [submodule "lib/toml"]
 	path = lib/toml
 	url = https://github.com/marzer/tomlplusplus/
+[submodule "lib/stb"]
+	path = lib/stb
+	url = https://github.com/nothings/stb
