@@ -4,7 +4,7 @@
 #include <bgfx/bgfx.h>
 #include <glm/glm.hpp>
 
-#include "shader/shadermanager.hpp"
+#include "gfx/shader/shadermanager.hpp"
 
 struct Renderer {
   static constexpr bgfx::ViewId
