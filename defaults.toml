@@ -1,3 +1,11 @@
 [window]
 width = 1280
 height = 720
+
+[shaders]
+[shaders.example]
+vertex = "path_to_vertex"
+fragment = "path_to_fragment"
+
+[textures]
+example = "path_to_example"

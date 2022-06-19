@@ -5,12 +5,14 @@
 #include <glm/glm.hpp>
 
 #include "gfx/shader/shadermanager.hpp"
+#include "gfx/texture/texturemanager.hpp"
 
 struct Renderer {
   static constexpr bgfx::ViewId
     VIEW_MAIN = 0;
 
   ShaderManager shader_manager;
+  TextureManager texture_manager;
 
   Renderer();
   ~Renderer();

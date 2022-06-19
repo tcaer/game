@@ -27,6 +27,7 @@ void Renderer::init(glm::vec2 window_size) {
   bgfx::setDebug(BGFX_DEBUG_TEXT | BGFX_DEBUG_STATS);
 
   shader_manager.init();
+  texture_manager.init();
 }
 
 void Renderer::resize(glm::vec2 window_size) {

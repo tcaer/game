@@ -10,14 +10,13 @@ struct ShaderManager {
 
   void init();
 
-  void load_shader(std::string name, std::string vs_path, std::string fs_path);
-
-  bgfx::ProgramHandle get_shader(std::string name);
+  bgfx::ProgramHandle get_shader(const std::string name);
 
 private:
   std::unordered_map<std::string, bgfx::ProgramHandle> m_shaders;
 
-  bgfx::ShaderHandle process_shader(std::string path);
+  void load_shader(const std::string name, const std::string vs_path, const std::string fs_path);
+  bgfx::ShaderHandle process_shader(const std::string path);
 };
 
 #endif
